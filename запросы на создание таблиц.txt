@@ -1,0 +1,52 @@
+CREATE TABLE [dbo].[User] (
+    [ID]              INT            IDENTITY (1, 1) NOT NULL,
+    [UserId]          NVARCHAR (128) NOT NULL,
+    [TrafficTypeID]   INT            NOT NULL,
+    [IMContactTypeID] INT            NOT NULL,
+    [IMContactValue]  NVARCHAR (256) NOT NULL,
+    [Rate]            FLOAT (53)     NULL,
+    [Notes]           NVARCHAR (500) NULL,
+    [PaymentInfo]     NVARCHAR (256) NULL,
+    CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_User_ToTable] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
+);
+
+CREATE TABLE [dbo].[Clicks] (
+    [ID]              UNIQUEIDENTIFIER DEFAULT (newid()) NOT NULL,
+    [ClickDate]       DATETIME         CONSTRAINT [DF_Clicks_Date] DEFAULT (getutcdate()) NULL,
+    [PaymentDate]     DATETIME         NULL,
+    [Amount]          DECIMAL (18, 4)  NULL,
+    [AffiliateAmount] DECIMAL (18, 4)  NULL,
+    [UserID]          INT              NOT NULL,
+    [TrackerID]       INT              NULL,
+    [CountryID]       INT              NULL,
+    [RedirectID]      INT              NULL,
+    [LandingID]       INT              NULL,
+    [PlatformID]      TINYINT          NULL,
+    [DeviceTypeID]    TINYINT          NULL,
+    [CarrierID]       SMALLINT         NULL,
+    [IPAddress]       BIGINT           NULL,
+    CONSTRAINT [PK_Clicks] PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_Clicks_ToTable] FOREIGN KEY ([UserID]) REFERENCES [dbo].[User] ([ID])
+);
+
+CREATE TABLE [dbo].[AspNetUsers] (
+    [Id]                   NVARCHAR (128) NOT NULL,
+    [Email]                NVARCHAR (256) NULL,
+    [EmailConfirmed]       BIT            NOT NULL,
+    [PasswordHash]         NVARCHAR (MAX) NULL,
+    [SecurityStamp]        NVARCHAR (MAX) NULL,
+    [PhoneNumber]          NVARCHAR (MAX) NULL,
+    [PhoneNumberConfirmed] BIT            NOT NULL,
+    [TwoFactorEnabled]     BIT            NOT NULL,
+    [LockoutEndDateUtc]    DATETIME       NULL,
+    [LockoutEnabled]       BIT            NOT NULL,
+    [AccessFailedCount]    INT            NOT NULL,
+    [UserName]             NVARCHAR (256) NOT NULL,
+    CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex]
+    ON [dbo].[AspNetUsers]([UserName] ASC);

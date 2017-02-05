@@ -1,0 +1,11 @@
+CREATE PROCEDURE [dbo].[GetUserName] 
+
+AS
+	DECLARE @t VARCHAR(8) = CONVERT( VARCHAR( 8 ), GETDATE(), 108 );
+	DECLARE @dt1 datetime = GETDATE() - @t; 
+	
+	DECLARE @dt2 datetime = @dt1 - 1;
+	DECLARE @dt3 datetime = @dt1 - 8;
+	SELECT UserName FROM AspNetUsers WHERE Id IN
+	(SELECT [dbo].[User].[UserId] FROM [dbo].[User] WHERE ID IN 
+		(SELECT UserID FROM Clicks WHERE Clicks.ClickDate < @dt1 and Clicks.ClickDate > @dt2 and Clicks.Amount < 10) and (SELECT SUM(Clicks.Amount)/7 FROM Clicks WHERE Clicks.ClickDate < @dt2 and Clicks.ClickDate > @dt3) > 10)
