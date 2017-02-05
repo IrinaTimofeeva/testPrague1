@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Выполнение хранимой процедуры</h1>
+    <p class="lead">Результат в виде JSON</p>
+    <div>
+        @foreach (char username in ViewBag.usernames)
+        {
+            <b>@username</b>
+        }
+    </div>
+</div>
